@@ -1,5 +1,5 @@
 ﻿import { useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, FlatList } from "react-native";
 import TaskToDo from "../components/TaskToDo.js";
 import AddTaskButton from "../components/AddTaskButton.js";
 
@@ -15,11 +15,12 @@ export default function DailyRoutine() {
 
     return (
         <View style={styles.main}>
-            <View style={styles.container}>
-                {tasks.map((task) => {
-                    return <TaskToDo task={task} key={task.title} />;
-                })}
-            </View>
+            <FlatList
+                data={tasks}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => <TaskToDo task={item} />}
+                contentContainerStyle={{ padding: 10 }}
+            />
             <View style={styles.button}>
                 <AddTaskButton onAddTask={handleAddTask} />
             </View>
@@ -36,12 +37,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         textAlign: "center",
     },
     button: {
         alignItems: "center",
-        borderTopWidth: "1px",
+        borderTopWidth: 1,
         borderTopColor: "black",
+        borderWidth: 1,
+        backgroundColor: "grey",
+        padding: "5%",
     },
 });
