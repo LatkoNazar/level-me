@@ -15,6 +15,14 @@ export default function DailyRoutine() {
         ]);
     }
 
+    function handleChangeTask(taskId, newtext) {
+        setTasks((prevTasks) =>
+            prevTasks.map((task) =>
+                task.id === taskId ? { ...task, title: newtext } : task
+            )
+        );
+    }
+
     function toggleTaskCompleted(taskId) {
         setTasks((prevTasks) => {
             const updated = prevTasks.map((task) =>
@@ -30,7 +38,7 @@ export default function DailyRoutine() {
         setTasks([]);
     }
 
-    function deleteTask(taskId) {
+    function handleDeleteTask(taskId) {
         setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
     }
 
@@ -49,7 +57,8 @@ export default function DailyRoutine() {
                             renderItem={({ item }) => (
                                 <TaskToDo
                                     task={item}
-                                    deleteTask={deleteTask}
+                                    onDeleteTask={handleDeleteTask}
+                                    onEditTask={handleChangeTask}
                                     toggleTaskCompleted={toggleTaskCompleted}
                                 />
                             )}
@@ -69,7 +78,7 @@ export default function DailyRoutine() {
                             renderItem={({ item }) => (
                                 <TaskToDo
                                     task={item}
-                                    deleteTask={deleteTask}
+                                    onDeleteTask={handleDeleteTask}
                                     toggleTaskCompleted={toggleTaskCompleted}
                                 />
                             )}

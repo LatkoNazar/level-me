@@ -12,6 +12,7 @@ export default function ClearTasks(props) {
 
 ClearTasks.propTypes = {
     onClearTask: PropTypes.func.isRequired,
+    style: PropTypes.object,
 };
 
 const styles = StyleSheet.create({});

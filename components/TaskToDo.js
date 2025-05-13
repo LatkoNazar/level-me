@@ -1,11 +1,19 @@
-﻿import { TouchableOpacity, View, StyleSheet, Modal } from "react-native";
-import React, { useState } from "react";
+﻿import {
+    TouchableOpacity,
+    View,
+    StyleSheet,
+    Modal,
+    TextInput,
+    Button,
+} from "react-native";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import AppText from "./AppText";
 
 export default function TaskToDo(props) {
     const [menuVisible, setMenuVisible] = useState(false);
-    const [taskInfoVisible, setTaskInfoVisible] = useState(false);
+    const [changeTaskVisible, setChangeTaskVisible] = useState(false);
+    const [taskText, setTaskText] = useState(props.task.title);
 
     function handleCompletedTask() {
         props.toggleTaskCompleted(props.task.id);
@@ -15,13 +23,28 @@ export default function TaskToDo(props) {
         setMenuVisible(!menuVisible);
     }
 
-    function handleShowInfo() {
-        setTaskInfoVisible(!taskInfoVisible);
+    function handleChangeButtonPress() {
+        setMenuVisible(!menuVisible);
+        setChangeTaskVisible(!changeTaskVisible);
     }
 
     function handleDelete() {
-        props.deleteTask(props.task.id);
+        props.onDeleteTask(props.task.id);
     }
+
+    function handleChangeTask() {
+        if (taskText.trim()) {
+            props.onEditTask(props.task.id, taskText);
+            setTaskText("");
+            setChangeTaskVisible(false);
+        }
+    }
+
+    useEffect(() => {
+        if (changeTaskVisible) {
+            setTaskText(props.task.title);
+        }
+    }, [changeTaskVisible]);
 
     return (
         <View style={styles.container}>
@@ -55,10 +78,12 @@ export default function TaskToDo(props) {
                         </View>
                         <View style={styles.buttonGroup}>
                             <TouchableOpacity
-                                style={styles.infoButton}
-                                onPress={handleShowInfo}
+                                style={styles.changeButton}
+                                onPress={handleChangeButtonPress}
                             >
-                                <AppText style={styles.infoText}>Info</AppText>
+                                <AppText style={styles.changeText}>
+                                    Change
+                                </AppText>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.deleteButton}
@@ -68,6 +93,28 @@ export default function TaskToDo(props) {
                                     Delete
                                 </AppText>
                             </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+            <Modal transparent={true} visible={changeTaskVisible}>
+                <View style={styles.changeModalContainer}>
+                    <View style={styles.changeModalContent}>
+                        <AppText>Enter your task:</AppText>
+                        <TextInput
+                            placeholder="Change task..."
+                            value={taskText}
+                            onChangeText={setTaskText}
+                            style={styles.input}
+                        />
+                        <View style={styles.buttonGroup}>
+                            <Button title="Change" onPress={handleChangeTask} />
+                            <Button
+                                title="Cancel"
+                                color="gray"
+                                onPress={() => setChangeTaskVisible(false)}
+                            />
                         </View>
                     </View>
                 </View>
@@ -82,8 +129,9 @@ TaskToDo.propTypes = {
         title: PropTypes.string.isRequired,
         completed: PropTypes.bool.isRequired,
     }).isRequired,
-    deleteTask: PropTypes.func.isRequired,
+    onDeleteTask: PropTypes.func.isRequired,
     toggleTaskCompleted: PropTypes.func,
+    onEditTask: PropTypes.func,
 };
 
 const styles = StyleSheet.create({
@@ -161,7 +209,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
     },
-    infoButton: {
+    changeButton: {
         alignItems: "center",
         flex: 1,
         backgroundColor: "lightblue",
@@ -182,5 +230,28 @@ const styles = StyleSheet.create({
 
     X: {
         fontSize: 30,
+    },
+    changeModalContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "lightgrey",
+    },
+
+    changeModalContent: {
+        borderRadius: 10,
+        backgroundColor: "#fff",
+        padding: 20,
+        width: "80%",
+        alignItems: "center",
+    },
+
+    input: {
+        marginTop: 5,
+        width: "100%",
+        padding: 10,
+        borderWidth: 1,
+        borderRadius: 5,
+        marginBottom: 5,
     },
 });

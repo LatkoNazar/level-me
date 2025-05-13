@@ -58,6 +58,7 @@ export default function AddTaskButton(props) {
 
 AddTaskButton.propTypes = {
     onAddTask: PropTypes.func.isRequired,
+    style: PropTypes.object,
 };
 
 const styles = StyleSheet.create({
