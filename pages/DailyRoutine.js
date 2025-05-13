@@ -1,7 +1,9 @@
 ﻿import { useState } from "react";
-import { View, StyleSheet, Text, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, ScrollView } from "react-native";
 import TaskToDo from "../components/TaskToDo.js";
 import AddTaskButton from "../components/AddTaskButton.js";
+import ClearTasks from "../components/ClearTasks.js";
+import AppText from "../components/AppText.js";
 
 export default function DailyRoutine() {
     const [tasks, setTasks] = useState([]);
@@ -13,16 +15,83 @@ export default function DailyRoutine() {
         ]);
     }
 
+    function toggleTaskCompleted(taskId) {
+        setTasks((prevTasks) => {
+            const updated = prevTasks.map((task) =>
+                task.id === taskId
+                    ? { ...task, completed: !task.completed }
+                    : task
+            );
+            return [...updated].sort((a, b) => a.completed - b.completed);
+        });
+    }
+
+    function handleClearList() {
+        setTasks([]);
+    }
+
+    function deleteTask(taskId) {
+        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+    }
+
+    const uncompletedTasks = tasks.filter((task) => !task.completed);
+    const completedTasks = tasks.filter((task) => task.completed);
+
     return (
         <View style={styles.main}>
-            <FlatList
-                data={tasks}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => <TaskToDo task={item} />}
-                contentContainerStyle={{ padding: 10 }}
-            />
-            <View style={styles.button}>
-                <AddTaskButton onAddTask={handleAddTask} />
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+                <View style={styles.taskSection}>
+                    <AppText style={styles.sectionHeader}>Uncompleted:</AppText>
+                    {uncompletedTasks.length > 0 ? (
+                        <FlatList
+                            data={uncompletedTasks}
+                            keyExtractor={(item) => item.id}
+                            renderItem={({ item }) => (
+                                <TaskToDo
+                                    task={item}
+                                    deleteTask={deleteTask}
+                                    toggleTaskCompleted={toggleTaskCompleted}
+                                />
+                            )}
+                            scrollEnabled={false}
+                        />
+                    ) : (
+                        <AppText style={styles.emptyText}>No tasks</AppText>
+                    )}
+                </View>
+
+                <View style={styles.taskSection}>
+                    <AppText style={styles.sectionHeader}>Completed:</AppText>
+                    {completedTasks.length > 0 ? (
+                        <FlatList
+                            data={completedTasks}
+                            keyExtractor={(item) => item.id}
+                            renderItem={({ item }) => (
+                                <TaskToDo
+                                    task={item}
+                                    deleteTask={deleteTask}
+                                    toggleTaskCompleted={toggleTaskCompleted}
+                                />
+                            )}
+                            scrollEnabled={false}
+                        />
+                    ) : (
+                        <AppText style={styles.emptyText}>
+                            No uncompleted tasks
+                        </AppText>
+                    )}
+                </View>
+            </ScrollView>
+
+            <View style={styles.buttons}>
+                <AddTaskButton
+                    onAddTask={handleAddTask}
+                    style={styles.customButton}
+                />
+                <ClearTasks
+                    onClearTask={handleClearList}
+                    style={styles.customButton}
+                />
             </View>
         </View>
     );
@@ -31,21 +100,37 @@ export default function DailyRoutine() {
 const styles = StyleSheet.create({
     main: {
         flex: 1,
-        justifyContent: "center",
-        backgroundColor: "#f2f2f2",
     },
-    container: {
+    scrollContent: {
+        padding: 10,
+    },
+    taskSection: {
+        marginBottom: 20,
+    },
+    sectionHeader: {
+        fontSize: 25,
+        fontWeight: "bold",
+        marginBottom: 10,
+    },
+    emptyText: {
+        fontStyle: "italic",
+        color: "#777",
+    },
+    buttons: {
+        flexDirection: "row",
+        alignItems: "center",
+        padding: 15,
+        justifyContent: "space-between",
+        gap: 15,
+    },
+    customButton: {
         flex: 1,
-        alignItems: "center",
-        justifyContent: "flex-start",
-        textAlign: "center",
-    },
-    button: {
-        alignItems: "center",
-        borderTopWidth: 1,
-        borderTopColor: "black",
         borderWidth: 1,
-        backgroundColor: "grey",
-        padding: "5%",
+        backgroundColor: "lightgrey",
+        paddingVertical: 12,
+        paddingHorizontal: 15,
+        borderRadius: 10,
+        alignItems: "center",
+        gap: 10,
     },
 });

@@ -1,7 +1,6 @@
 ﻿import React, { useState } from "react";
 import {
     View,
-    Text,
     Button,
     TextInput,
     Modal,
@@ -9,36 +8,40 @@ import {
     StyleSheet,
 } from "react-native";
 import PropTypes from "prop-types";
+import AppText from "./AppText";
 
-export default function AddTaskButton({ onAddTask }) {
+export default function AddTaskButton(props) {
     const [modalVisible, setModalVisible] = useState(false);
     const [taskText, setTaskText] = useState("");
 
     function handleAdd() {
         if (taskText.trim()) {
-            onAddTask(taskText);
+            props.onAddTask(taskText);
             setTaskText("");
             setModalVisible(false);
         }
     }
 
     return (
-        <View>
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Text>Add new task</Text>
+        <>
+            <TouchableOpacity
+                onPress={() => setModalVisible(true)}
+                style={props.style}
+            >
+                <AppText style={{ fontSize: 16 }}>Add new task</AppText>
             </TouchableOpacity>
 
             <Modal transparent={true} visible={modalVisible}>
-                <View style={style.modalContainer}>
-                    <View style={style.modalContent}>
-                        <Text>Enter your task:</Text>
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <AppText>Enter your task:</AppText>
                         <TextInput
                             placeholder="Your new task..."
                             value={taskText}
                             onChangeText={setTaskText}
-                            style={style.input}
+                            style={styles.input}
                         />
-                        <View style={style.buttonGroup}>
+                        <View style={styles.buttonGroup}>
                             <Button title="Add" onPress={handleAdd} />
                             <Button
                                 title="Cancel"
@@ -49,7 +52,7 @@ export default function AddTaskButton({ onAddTask }) {
                     </View>
                 </View>
             </Modal>
-        </View>
+        </>
     );
 }
 
@@ -57,13 +60,17 @@ AddTaskButton.propTypes = {
     onAddTask: PropTypes.func.isRequired,
 };
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
+    buttonWrapper: {
+        flex: 1,
+    },
     modalContainer: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "lightgrey",
     },
+
     modalContent: {
         borderRadius: 10,
         backgroundColor: "#fff",
@@ -71,13 +78,16 @@ const style = StyleSheet.create({
         width: "80%",
         alignItems: "center",
     },
+
     input: {
+        marginTop: 5,
         width: "100%",
         padding: 10,
         borderWidth: 1,
         borderRadius: 5,
         marginBottom: 5,
     },
+
     buttonGroup: {
         flexDirection: "row",
         justifyContent: "space-between",
