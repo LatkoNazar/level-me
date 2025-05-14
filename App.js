@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomePage from "./pages/HomePage";
 import DailyRoutine from "./pages/DailyRoutine";
-import MyPath from "./pages/My Path";
+import MyPath from "./pages/MyPath";
 import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
