@@ -1,11 +1,11 @@
 ﻿import { View, Text } from "react-native";
 
-export default function ComponentsOfSuccess() {
+export default function MyPath() {
     return (
         <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-            <Text>Components Of Success</Text>
+            <Text>My Path</Text>
         </View>
     );
 }

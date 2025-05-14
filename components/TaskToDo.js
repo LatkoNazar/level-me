@@ -136,7 +136,7 @@ TaskToDo.propTypes = {
 
 const styles = StyleSheet.create({
     container: {
-        width: "95%",
+        width: "100%",
         alignSelf: "center",
         padding: 10,
         borderRadius: 5,

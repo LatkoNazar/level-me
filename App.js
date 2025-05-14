@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomePage from "./pages/HomePage";
 import DailyRoutine from "./pages/DailyRoutine";
-import ComponentsOfSuccess from "./pages/ComponentsOfSuccess";
+import MyPath from "./pages/My Path";
 import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
@@ -23,8 +23,8 @@ export default function App() {
                             iconName = focused
                                 ? "checkmark-circle"
                                 : "checkmark-circle-outline";
-                        } else if (route.name === "Components of Success") {
-                            iconName = focused ? "trophy" : "trophy-outline";
+                        } else if (route.name === "My Path") {
+                            iconName = focused ? "star" : "star-outline";
                         }
                         return (
                             <Ionicons
@@ -40,10 +40,7 @@ export default function App() {
             >
                 <Tab.Screen name="Home" component={HomePage} />
                 <Tab.Screen name="Your Daily Tasks" component={DailyRoutine} />
-                <Tab.Screen
-                    name="Components of Success"
-                    component={ComponentsOfSuccess}
-                />
+                <Tab.Screen name="My Path" component={MyPath} />
             </Tab.Navigator>
         </NavigationContainer>
     );

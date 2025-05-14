@@ -109,6 +109,7 @@ export default function DailyRoutine() {
 const styles = StyleSheet.create({
     main: {
         flex: 1,
+        padding: 10,
     },
     scrollContent: {
         padding: 10,
